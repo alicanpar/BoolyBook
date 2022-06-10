@@ -1,0 +1,27 @@
+﻿@model List<Category>
+
+    <a class="btn btn-danger" href="@Url.Action("Create","newCategory")">New Category</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Display Order</th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.Id</td>
+            <td>@item.Name</td>
+            <td>@item.DisplayOrder</td>
+            <td><a class="btn btn-primary" href="@Url.Action("Create","newCategory",new{id=item.Id})" >Edit</a>
+            <a class="btn btn-primary" href="@Url.Action("Delete","newCategory",new{id=item.Id})" >Delete</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+

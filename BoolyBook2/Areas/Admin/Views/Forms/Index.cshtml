@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Forms";
+}
+<tbody>
+    <tr>
+        <td>
+            <div class="text-center col-6 container w-100" role="group">
+                <a class="btn btn-primary mx-2" id="create_button_id" onclick="createClick()">Create</a>
+                <a class="btn btn-primary mx-2" id="edit_button_id" onclick="editClick()">Edit</a>
+                @*<div>
+                <input type="checkbox" class="custom-control-input" id="" name="Forms_id" value="1" checked="">
+                <label class="custom-control-input" for="">Kayıt</label>
+                </div>*@
+            </div><br /><br /><br />
+            <div id="forms_id">
+            </div>
+        </td>
+    </tr>
+</tbody>
+
+<script>
+    //$("#create_button_id").click(function()
+
+    function createClick() {
+        console.log("tıkladın");
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("CreatePartial","Forms")",
+            success: function(response) {
+
+                if (response !== null) {
+                    $("#forms_id").html(response)
+                }
+            }
+        })
+    };
+    function editClick() {
+        console.log("tıkladın");
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("EditPartial","Forms")",
+            success: function(response) {
+                debugger;
+                if (response !== null) {
+                    $("#forms_id").html(response)
+                }
+            }
+        })
+    };
+    
+
+</script>
+@section scripts
+    {
+    @{
+        <partial name="_ValidationScriptsPartial"></partial>
+    }
+
+    }
