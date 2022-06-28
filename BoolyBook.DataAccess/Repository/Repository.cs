@@ -17,20 +17,24 @@ namespace BoolyBook.DataAccess.Repository
         public Repository(ApplicationDbContext db)
         {
             _db = db;
-            //_db.Products.Include(u => u.Category).Include(u=>u.CoverType);
-            this.dbSet=_db.Set<T>();
+            //_db.ShoppingCarts.Include(u => u.Product).Include(u=>u.CoverType);
+            this.dbSet = _db.Set<T>();
         }
         public void Add(T entitiy)
         {
             dbSet.Add(entitiy);
         }
         //includeProp-"Category, CoverType"
-        public IEnumerable<T> GetAll(string? includeProperies = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter=null, string? includeProperies = null)
         {
             IQueryable<T> query = dbSet;
-            if(includeProperies != null)
+            if(filter != null)
             {
-                foreach(var includeProp in includeProperies.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                query = query.Where(filter);
+            }
+            if (includeProperies != null)
+            {
+                foreach (var includeProp in includeProperies.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProp);
                 }
@@ -41,7 +45,7 @@ namespace BoolyBook.DataAccess.Repository
         public T GetFirstOrDefault(Expression<Func<T, bool>> filter, string? includeProperies = null)
         {
             IQueryable<T> query = dbSet;
-            query=query.Where(filter);
+            query = query.Where(filter);
             if (includeProperies != null)
             {
                 foreach (var includeProp in includeProperies.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))

@@ -863,3 +863,64 @@ button {
     .btn-16:active {
         top: 2px;
     }
+
+a.arrow-button {
+    margin: 1em auto;
+    width: 280px;
+    text-align: center;
+    background-color: #eee;
+    padding: 0.5em 0;
+    display: block;
+    color: #333;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    box-shadow: 1px 1px 5px 0px rgba(50, 50, 50, 0.6);
+    border-radius: 8px;
+    &:hover
+
+{
+    color: #eee;
+    background-color: #333;
+}
+
+}
+
+.arrow-left {
+    &:before
+
+{
+    content: '\25c4';
+    padding-right: 0.5em;
+}
+
+}
+
+.arrow-right {
+    &:after
+
+{
+    content: '\25ba';
+    padding-left: 0.5em;
+}
+
+}
+
+.arrow-down {
+    &:after
+
+{
+    content: '\25bc';
+    padding-left: 0.5em;
+}
+
+}
+
+.arrow-up {
+    &:after
+
+{
+    content: '\25b2';
+    padding-left: 0.5em;
+}
+}

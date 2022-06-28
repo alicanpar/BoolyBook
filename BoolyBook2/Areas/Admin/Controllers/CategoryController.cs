@@ -1,10 +1,12 @@
 ﻿using BoolyBook.DataAccess.IRepository;
 using BoolyBook.Models;
 using BoolyBook2.DataAccess;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoolyBook2.Web.Areas.Admin.Controllers;
-
+[AllowAnonymous]
+[Area("Admin")]
 public class CategoryController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
