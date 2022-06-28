@@ -5,6 +5,7 @@
     var completed = "text-primary";
     var approved = "text-primary";
     var all = "text-primary";
+    var canceled = "text-primary";
     switch (status)
     {
         case "pending":
@@ -18,6 +19,9 @@
             break;
         case "approved":
             approved = "active text-white";
+            break;
+            case "canceled":
+            canceled = "active text-white";
             break;
         default:
             all = "active text-white";
@@ -42,6 +46,9 @@
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="approved">
                 <li class="list-group-item @approved">Onaylı</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="canceled">
+                <li class="list-group-item @canceled">İade</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="all">
                 <li class="list-group-item @all">Hepsi</li>

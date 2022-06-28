@@ -17,7 +17,12 @@ $(document).ready(function () {
                     loadDataTable("approved");
                 }
                 else {
-                    loadDataTable("all");
+                    if (url.includes("canceled")) {
+                        loadDataTable("canceled");
+                    }
+                    else {
+                        loadDataTable("all");
+                    }
                 }
             }
         }

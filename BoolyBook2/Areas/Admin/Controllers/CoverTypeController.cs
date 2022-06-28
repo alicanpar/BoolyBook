@@ -1,12 +1,14 @@
 ﻿using BoolyBook.DataAccess.IRepository;
 using BoolyBook.Models;
 using BoolyBook2.DataAccess;
+using BoolyBook2.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoolyBook2.Web.Areas.Admin.Controllers;
-[AllowAnonymous]
 [Area("Admin")]
+[Authorize(Roles = SD.Role_Admin)]
+
 public class CoverTypeController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;

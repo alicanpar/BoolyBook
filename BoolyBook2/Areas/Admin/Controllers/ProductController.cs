@@ -2,6 +2,7 @@
 using BoolyBook.Models;
 using BoolyBook.Models.ViewModels;
 using BoolyBook2.DataAccess;
+using BoolyBook2.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,9 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace BoolyBook2.Web.Areas.Admin.Controllers;
-
-[AllowAnonymous]
 [Area("Admin")]
+[Authorize(Roles = SD.Role_Admin)]
+
 public class ProductController : Controller
 {
     private readonly IUnitOfWork _unitOfWork;
