@@ -1,4 +1,6 @@
-﻿@using BoolyBook2.Utility
+﻿@using Microsoft.AspNetCore.Http
+@using BoolyBook2.Utility
+@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +15,7 @@
     <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <link href="~/css/button_styles.css" rel="stylesheet">
     <link href="~/css/index_styles.css" rel="stylesheet">
+    <link href="~/css/dropdown.css" rel="stylesheet">
     <script src="https://cdn.tiny.cloud/1/sid5w4nv6f9osdu73ttigu7kckusbw9kl5z2n83vqrslqnqe/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 </head>
@@ -34,6 +37,14 @@
                             <a class=nav-link asp-area="Admin" asp-controller="Order" asp-action="Index">Sipariş Yönetimi</a>
                         </li>
                         @*<li class="nav-item">
+                            <div class="dropdown adt-menu">
+                                <div class="item collapse-1 adt-item">Item 2</div>
+                                <div class="item collapse-1 adt-item">Item 3</div>
+                                <div class="item collapse-1 adt-item">Item 4</div>
+                                <div class="item collapse-1 adt-item">Select Item</div>
+                            </div>
+                        </li>*@
+                        @*<li class="nav-item">
                         <a class="nav-link" asp-area="Admin" asp-controller="Forms" asp-action="Index">Forms</a>
                         </li>*@
                         @if (User.IsInRole(SD.Role_Admin))
@@ -51,9 +62,14 @@
                             </li>
                         }
                     </ul>
-
-                    <a class=nav-link asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-basket3-fill"></i></a>
-
+                    @*@if(HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart)!=null)
+                    {
+                    <a class=nav-link asp-area="Customer" asp-controller="Cart" asp-action="Index"><i class="bi bi-basket3-fill"></i>&nbsp;
+                        (@HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart))</a>
+                    }
+                    else{*@
+                    <a class=nav-link asp-area="Customer" asp-controller="Cart" asp-action="Index">@await Component.InvokeAsync("ShoppingCart")</a> 
+                    
                     <partial name="_LoginPartial" />
                     @*<form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">
@@ -103,6 +119,9 @@
     <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="~/js/dropdown.js"></script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

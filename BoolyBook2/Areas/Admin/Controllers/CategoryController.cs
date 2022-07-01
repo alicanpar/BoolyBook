@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoolyBook2.Web.Areas.Admin.Controllers;
-[AllowAnonymous]
 [Area("Admin")]
 [Authorize(Roles =SD.Role_Admin)]
 public class CategoryController : Controller

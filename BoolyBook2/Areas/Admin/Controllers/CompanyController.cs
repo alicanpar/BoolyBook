@@ -10,8 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace BoolyBook2.Web.Areas.Admin.Controllers;
-
-[AllowAnonymous]
 [Area("Admin")]
 [Authorize(Roles = SD.Role_Admin)]
 

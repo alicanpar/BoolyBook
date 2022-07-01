@@ -3,6 +3,7 @@ using BoolyBook.Models;
 using BoolyBook.Models.ViewModels;
 using BoolyBook2.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using System.Security.Claims;
@@ -14,12 +15,14 @@ namespace BoolyBook2.Web.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailSender _emailSender;
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
         public int OrderTotal { get; set; }
-        public CartController(IUnitOfWork unitOfWork)
+        public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
+            _emailSender = emailSender;
         }
 
         public IActionResult Index()
@@ -164,7 +167,7 @@ namespace BoolyBook2.Web.Areas.Customer.Controllers
         }
         public IActionResult OrderConfirmation(int id)
         {
-            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id);
+            OrderHeader orderHeader = _unitOfWork.OrderHeader.GetFirstOrDefault(u => u.Id == id,includeProperties:"ApplicationUser");
             if(orderHeader.PaymentStatus!=SD.PaymentStatusDelayedPayment)
             {
                 var service = new SessionService();
@@ -176,7 +179,7 @@ namespace BoolyBook2.Web.Areas.Customer.Controllers
                     _unitOfWork.Save();
                 }
             }
-            
+            _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - BoolyBook", "<p> Yeni Emir Oluşturuldu</p>");
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId ==
             orderHeader.ApplicationUserId).ToList();
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
@@ -197,6 +200,8 @@ namespace BoolyBook2.Web.Areas.Customer.Controllers
             {
                 _unitOfWork.ShoppingCart.Remove(cart);
                 TempData["success"] = "Prodduct Deleted";
+                var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count-1;
+                HttpContext.Session.SetInt32(SD.SessionCart, count);
             }
             else
             {
@@ -210,6 +215,8 @@ namespace BoolyBook2.Web.Areas.Customer.Controllers
             var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
             _unitOfWork.ShoppingCart.Remove(cart);
             _unitOfWork.Save();
+            var count=_unitOfWork.ShoppingCart.GetAll(u=>u.ApplicationUserId==cart.ApplicationUserId).ToList().Count;
+            HttpContext.Session.SetInt32(SD.SessionCart, count);
             TempData["success"] = "Product Deleted Successfully";
             return RedirectToAction(nameof(Index));
         }

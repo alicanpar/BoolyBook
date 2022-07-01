@@ -16,5 +16,11 @@ namespace BoolyBook.DataAccess.Repository
         {
             _db = db;
         }
+        public string Get(string UserName)
+        {
+            var User = _db.ApplicationUsers.FirstOrDefault(w => w.UserName == UserName );
+
+            return User.Name;
+        }
     }
 }

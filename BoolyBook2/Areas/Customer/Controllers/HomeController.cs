@@ -1,5 +1,6 @@
 ﻿using BoolyBook.DataAccess.IRepository;
 using BoolyBook.Models;
+using BoolyBook2.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -48,14 +49,18 @@ namespace BoolyBook2.Web.Areas.Customer.Controllers
                 u => u.ApplicationUserId == claim.Value && u.ProductId == shoppingCart.ProductId);
             if (cartFromDb == null)
             {
-                _unitOfWork.ShoppingCart.Add(shoppingCart);                
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+                _unitOfWork.Save();
+                TempData["success"] = "Ürün eklendi!";
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                    _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count);
             }
             else
             {
                 _unitOfWork.ShoppingCart.IncrementCount(cartFromDb, shoppingCart.Count);
+                _unitOfWork.Save();
             }
-            _unitOfWork.Save();
-            TempData["success"] = "Product Add";
+
             return RedirectToAction(nameof(Index));
         }
 
