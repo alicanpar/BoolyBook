@@ -182,6 +182,7 @@ namespace BoolyBook2.Web.Areas.Customer.Controllers
             _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - BoolyBook", "<p> Yeni Emir Oluşturuldu</p>");
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId ==
             orderHeader.ApplicationUserId).ToList();
+            HttpContext.Session.Clear();
             _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
             _unitOfWork.Save();
             return View(id);

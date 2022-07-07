@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BoolyBook.Models\BoolyBook.Models.csproj" />
+    <ProjectReference Include="..\BoolyBook.Utility\BoolyBook.Utility.csproj" />
   </ItemGroup>
 
 </Project>

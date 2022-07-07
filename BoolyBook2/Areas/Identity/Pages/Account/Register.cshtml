@@ -1,10 +1,17 @@
 ﻿@page
+@using BoolyBook2.Utility
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
 }
-
-@*<h1>@ViewData["Title"]</h1>*@
+@if (User.IsInRole(SD.Role_Admin))
+{
+    <h1 class="p-4">Register-Admin Portal</h1>
+}
+else
+{
+    <h1 class="p-4">@ViewData["Title"]</h1>
+}
 
 <div class="row">
     <div class="col-md-7 pt-4">
@@ -57,48 +64,54 @@
                 <label asp-for="Input.ConfirmPassword"></label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <div class="form-floating py-2 col-12">
-                <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class=form-select>
-                    <option disabled selected>-Select Role-</option>
-                </select>
-            </div>
-            <div class="form-floating py-2 col-12">
-                <select asp-for="Input.CompanyId" style="display:none;" asp-items="@Model.Input.CompanyList" class=form-select>
-                    <option disabled selected>-Select Company-</option>
-                </select>
-            </div>
+            @if (User.IsInRole(SD.Role_Admin))
+            {
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="Input.Role" asp-items="@Model.Input.RoleList" class=form-select>
+                        <option disabled selected>-Select Role-</option>
+                    </select>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <select asp-for="Input.CompanyId" style="display:none;" asp-items="@Model.Input.CompanyList" class=form-select>
+                        <option disabled selected>-Select Company-</option>
+                    </select>
+                </div>
+            }
             <button id="registerSubmit" type="submit" class="w-100 custom-btn btn-13">Register</button>
         </form>
     </div>
-    <div class="col-md-4 ">
-        <section>
-            <h3>Use another service to register.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
+    @if (!User.IsInRole(SD.Role_Admin))
+    {
+        <div class="col-md-4 ">
+            <section>
+                <h3>Use another service to register.</h3>
+                <hr />
+                @{
+                    if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                    {
                         <div>
                             <p>
                                 Register Sayfası
                             </p>
                         </div>
-                }
-                else
-                {
+                    }
+                    else
+                    {
                         <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                             <div>
                                 <p>
                                     @foreach (var provider in Model.ExternalLogins)
-                                {
+                                    {
                                         <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
+                                    }
                                 </p>
                             </div>
                         </form>
+                    }
                 }
-            }
-        </section>
-    </div>
+            </section>
+        </div>
+    }
 </div>
 
 @section Scripts {

@@ -128,13 +128,7 @@ namespace BoolyBook2.Web.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (!_roleManager.RoleExistsAsync(SD.Role_Admin).GetAwaiter().GetResult())
-            {
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_Employee)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_User_Indi)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new IdentityRole(SD.Role_User_Comp)).GetAwaiter().GetResult();
-            }
+            
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             Input = new InputModel()
@@ -144,7 +138,7 @@ namespace BoolyBook2.Web.Areas.Identity.Pages.Account
                     Text = i,
                     Value = i
                 }),
-                CompanyList=_unitOfWork.Company.GetAll().Select(i => new SelectListItem
+                CompanyList = _unitOfWork.Company.GetAll().Select(i => new SelectListItem
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
@@ -170,14 +164,14 @@ namespace BoolyBook2.Web.Areas.Identity.Pages.Account
                 user.PhoneNumber = Input.PhoneNumber;
                 if (Input.Role == SD.Role_User_Comp)
                 {
-                    user.CompanyId=Input.CompanyId;
+                    user.CompanyId = Input.CompanyId;
                 }
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    if(Input.Role==null)
+                    if (Input.Role == null)
                     {
                         await _userManager.AddToRoleAsync(user, SD.Role_User_Indi);
                     }
@@ -203,8 +197,17 @@ namespace BoolyBook2.Web.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        if(User.IsInRole(SD.Role_Admin))
+                        {
+                            TempData["success"] = "Yeni Kullanıcı Başarıyla Oluşturuldu";
+                        }
+                        else
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                        }
                         return LocalRedirect(returnUrl);
+
+
                     }
                 }
                 foreach (var error in result.Errors)
